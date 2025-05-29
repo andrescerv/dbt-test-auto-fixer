@@ -4,7 +4,6 @@ Base generator with common functionality for all prompt types.
 
 from pathlib import Path
 from typing import Dict, Any, List
-from ...test_analyzer import detect_test_type_from_unique_id
 
 
 class BaseGenerator:
@@ -44,27 +43,6 @@ class BaseGenerator:
             "error_threshold": test_data.get("error_threshold", ""),
             "warn_threshold": test_data.get("warn_threshold", "")
         }
-
-    def detect_test_type(self, test_data: Dict[str, Any]) -> str:
-        """Detect the type of test from simplified test data."""
-        # Use the test_type field directly from our simplified metadata
-        test_type = test_data.get("test_type")
-
-        if test_type:
-            # Map some test types to more user-friendly names
-            if test_type == "expect_row_values_to_have_data_for_every_n_datepart":
-                return "data_completeness"
-            return test_type
-
-        # Fallback to parsing unique_id using core detection logic
-        unique_id = test_data.get("unique_id", "")
-        detected_type = detect_test_type_from_unique_id(unique_id)
-
-        # Apply user-friendly mapping for specific types
-        if detected_type == "expect_row_values_to_have_data_for_every_n_datepart":
-            return "data_completeness"
-
-        return detected_type
 
     def format_expected_values_sql(self, values: List[str]) -> str:
         """Format expected values for SQL IN clause."""

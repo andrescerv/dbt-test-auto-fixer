@@ -49,11 +49,14 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
         test_metadata = test_definition.get("test_metadata", {})
         refs = test_definition.get("refs", [])
 
-        # Extract test type with fallback detection
+        # Extract test type with fallback detection and user-friendly mapping
         test_type = test_metadata.get("name")
         if not test_type:
-            # Use fallback detection for custom tests
+            # Use fallback detection for custom tests (already includes user-friendly mapping)
             test_type = detect_test_type_from_unique_id(unique_id)
+        else:
+            # Apply user-friendly mapping to test_metadata names as well
+            test_type = apply_user_friendly_mapping(test_type)
 
         simplified_test = {
             "unique_id": unique_id,
@@ -121,25 +124,39 @@ def _extract_test_name(unique_id: str) -> str:
         return last_part
 
 
+def apply_user_friendly_mapping(test_type: str) -> str:
+    """
+    Apply user-friendly mapping to test type names.
+    This is the single source of truth for test type name mapping.
+    """
+    if test_type == "expect_row_values_to_have_data_for_every_n_datepart":
+        return "data_completeness"
+    return test_type
+
+
 def detect_test_type_from_unique_id(unique_id: str) -> str:
     """
     Detect the type of test from unique_id when test_metadata is not available.
-    This is the core logic for test type detection.
+    This is the core logic for test type detection with user-friendly mapping applied.
     """
     if not unique_id:
         return "custom_test"
 
     # Check for known generic test patterns in unique_id
+    raw_test_type = None
     if "accepted_values" in unique_id:
-        return "accepted_values"
+        raw_test_type = "accepted_values"
     elif "not_null" in unique_id:
-        return "not_null"
+        raw_test_type = "not_null"
     elif "unique" in unique_id:
-        return "unique"
+        raw_test_type = "unique"
     elif "expression_is_true" in unique_id:
-        return "expression_is_true"
+        raw_test_type = "expression_is_true"
     elif "expect_row_values_to_have_data" in unique_id:
-        return "expect_row_values_to_have_data_for_every_n_datepart"
+        raw_test_type = "expect_row_values_to_have_data_for_every_n_datepart"
     else:
         # Default to custom_test for any unrecognized pattern
-        return "custom_test"
+        raw_test_type = "custom_test"
+
+    # Apply user-friendly mapping
+    return apply_user_friendly_mapping(raw_test_type)
