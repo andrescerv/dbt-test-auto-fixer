@@ -58,6 +58,9 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
             # Apply user-friendly mapping to test_metadata names as well
             test_type = apply_user_friendly_mapping(test_type)
 
+        # Extract model file paths from manifest
+        model_file_paths = _extract_model_file_paths(refs, manifest)
+
         simplified_test = {
             "unique_id": unique_id,
             "test_name": test_name,
@@ -72,6 +75,7 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
             "test_type": test_type,
             "test_parameters": test_metadata.get("kwargs", {}),
             "related_models": [ref.get("name", "") for ref in refs if ref.get("name")],
+            "model_file_paths": model_file_paths,
             "dependencies": test_definition.get("depends_on", {}).get("nodes", []),
             "schema_file": test_definition.get("original_file_path")
         }
@@ -96,6 +100,38 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
         json.dump(summary, f, indent=2)
 
     return str(output_path)
+
+
+def _extract_model_file_paths(refs: List[Dict[str, Any]], manifest: Dict[str, Any]) -> List[str]:
+    """
+    Extract model file paths from refs using the manifest.
+
+    Args:
+        refs: List of ref objects from test definition
+        manifest: The dbt manifest containing model definitions
+
+    Returns:
+        List of model file paths
+    """
+    model_file_paths = []
+    nodes = manifest.get("nodes", {})
+
+    for ref in refs:
+        model_name = ref.get("name", "")
+        if not model_name:
+            continue
+
+        # Find the model in the manifest nodes
+        # Model unique_ids follow the pattern: model.package.model_name
+        for node_id, node_data in nodes.items():
+            if (node_data.get("resource_type") == "model" and
+                node_data.get("name") == model_name):
+                file_path = node_data.get("original_file_path")
+                if file_path:
+                    model_file_paths.append(file_path)
+                break
+
+    return model_file_paths
 
 
 def _extract_test_name(unique_id: str) -> str:
