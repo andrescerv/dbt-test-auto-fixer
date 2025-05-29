@@ -58,7 +58,7 @@ Check for related models that might have the same issue:
 4. **Investigate and implement** the appropriate fix based on the decision framework
 5. **Test your changes**: `dbt test --select {test_short_name}`
 6. **Commit with descriptive message**: Explain the root cause and fix implemented
-7. **Create PR** with title: `🤖 Test auto-fix: Add missing accepted values for {model_name}.{column_name}`
+7. **Create PR** with title: `🤖 Auto-fix: Add missing accepted values for {model_name}.{column_name}`
 
 ## PR Description Template
 ```
