@@ -52,7 +52,7 @@ class GenericGenerator(BaseGenerator):
    "
    ```
 4. **Investigate and implement** the appropriate fix based on the decision framework""",
-            "pr_title": f"🤖 Auto-fix: {test_type} test for {data['model_name']}",
+            "pr_title": f"{data['priority']} 🤖 Auto-fix: {test_type} test for {data['model_name']}",
             "pr_summary": f"Auto-fix for failing {test_type} test on `{data['model_name']}`."
         }
 

@@ -52,7 +52,7 @@ ORDER BY count DESC
    "
    ```
 4. **Investigate and implement** the appropriate fix based on the decision framework""",
-            "pr_title": f"🤖 Auto-fix: Add missing accepted values for {data['model_name']}.{data['column_name']}",
+            "pr_title": f"{data['priority']} 🤖 Auto-fix: Add missing accepted values for {data['model_name']}.{data['column_name']}",
             "pr_summary": f"Auto-fix for failing accepted values test on `{data['model_name']}`."
         }
 

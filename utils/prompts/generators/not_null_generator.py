@@ -55,7 +55,7 @@ WHERE {data['column_name']} IS NULL
    - **If JOIN issue**: Fix JOIN conditions in the model
    - **If source data**: Add data cleaning logic or COALESCE
    - **If business rule change**: Update test configuration or remove test""",
-            "pr_title": f"🤖 Auto-fix: Fix null values in {data['model_name']}.{data['column_name']}",
+            "pr_title": f"{data['priority']} 🤖 Auto-fix: Fix null values in {data['model_name']}.{data['column_name']}",
             "pr_summary": f"Auto-fix for failing not_null test on `{data['model_name']}.{data['column_name']}`."
         }
 

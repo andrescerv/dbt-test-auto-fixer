@@ -68,7 +68,7 @@ ORDER BY {data['column_name']}
    - **If grain issue**: Fix GROUP BY logic or model design
    - **If source duplicates**: Add deduplication logic or fix upstream
    - **If JOIN issue**: Fix JOIN conditions to prevent cartesian products""",
-            "pr_title": f"🤖 Auto-fix: Fix duplicate values in {data['model_name']}.{data['column_name']}",
+            "pr_title": f"{data['priority']} 🤖 Auto-fix: Fix duplicate values in {data['model_name']}.{data['column_name']}",
             "pr_summary": f"Auto-fix for failing unique test on `{data['model_name']}.{data['column_name']}`."
         }
 

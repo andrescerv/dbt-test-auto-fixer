@@ -37,9 +37,6 @@ def cmd_generate_prompts(args):
         generated_count = 0
         for i, test in enumerate(failed_tests, 1):
             try:
-                # Generate prompt using prompt manager
-                prompt_content = prompt_manager.generate_prompt(test)
-
                 # Create filename
                 test_name = test.get("test_name", f"test_{i}")
                 tags = test.get("tags", [])
@@ -50,6 +47,13 @@ def cmd_generate_prompts(args):
                     if tag.endswith("_priority"):
                         priority = tag
                         break
+
+                # Add priority to test data for generators to use
+                test_with_priority = test.copy()
+                test_with_priority["priority"] = priority
+
+                # Generate prompt using prompt manager
+                prompt_content = prompt_manager.generate_prompt(test_with_priority)
 
                 safe_test_name = "".join(c for c in test_name if c.isalnum() or c in "_-")
                 filename = f"{priority}__{safe_test_name}.md"

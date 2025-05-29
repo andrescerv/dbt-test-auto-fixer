@@ -44,7 +44,8 @@ class BaseGenerator:
             "tags": test_data.get("tags", []),
             "severity": test_data.get("severity", ""),
             "error_threshold": test_data.get("error_threshold", ""),
-            "warn_threshold": test_data.get("warn_threshold", "")
+            "warn_threshold": test_data.get("warn_threshold", ""),
+            "priority": test_data.get("priority", "unknown_priority")
         }
 
     def format_expected_values_sql(self, values: List[str]) -> str:
