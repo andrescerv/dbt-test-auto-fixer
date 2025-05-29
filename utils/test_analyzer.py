@@ -49,6 +49,12 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
         test_metadata = test_definition.get("test_metadata", {})
         refs = test_definition.get("refs", [])
 
+        # Extract test type with fallback detection
+        test_type = test_metadata.get("name")
+        if not test_type:
+            # Use fallback detection for custom tests
+            test_type = detect_test_type_from_unique_id(unique_id)
+
         simplified_test = {
             "unique_id": unique_id,
             "test_name": test_name,
@@ -60,7 +66,7 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
             "severity": config.get("severity"),
             "error_threshold": config.get("error_if"),
             "warn_threshold": config.get("warn_if"),
-            "test_type": test_metadata.get("name"),
+            "test_type": test_type,
             "test_parameters": test_metadata.get("kwargs", {}),
             "related_models": [ref.get("name", "") for ref in refs if ref.get("name")],
             "dependencies": test_definition.get("depends_on", {}).get("nodes", []),
@@ -113,3 +119,27 @@ def _extract_test_name(unique_id: str) -> str:
     else:
         # Custom test without hash - use the test name (last part)
         return last_part
+
+
+def detect_test_type_from_unique_id(unique_id: str) -> str:
+    """
+    Detect the type of test from unique_id when test_metadata is not available.
+    This is the core logic for test type detection.
+    """
+    if not unique_id:
+        return "custom_test"
+
+    # Check for known generic test patterns in unique_id
+    if "accepted_values" in unique_id:
+        return "accepted_values"
+    elif "not_null" in unique_id:
+        return "not_null"
+    elif "unique" in unique_id:
+        return "unique"
+    elif "expression_is_true" in unique_id:
+        return "expression_is_true"
+    elif "expect_row_values_to_have_data" in unique_id:
+        return "expect_row_values_to_have_data_for_every_n_datepart"
+    else:
+        # Default to custom_test for any unrecognized pattern
+        return "custom_test"
