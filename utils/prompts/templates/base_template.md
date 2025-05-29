@@ -5,6 +5,12 @@
 
 **Secondary Goal**: Create a human-readable pull request that clearly explains the issue and solution. Remember that a human will review this PR, so keep explanations concise and focused.
 
+## Context Information
+**Analysis Date**: {current_date}
+**Today**: {day_of_week}, {formatted_date}
+
+*Note: All analysis and decisions should consider data freshness relative to today's date.*
+
 ## Critical Information
 {critical_info_section}
 

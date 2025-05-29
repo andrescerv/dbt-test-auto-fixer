@@ -4,6 +4,7 @@ Base generator with common functionality for all prompt types.
 
 from pathlib import Path
 from typing import Dict, Any, List
+from datetime import datetime
 
 
 class BaseGenerator:
@@ -19,12 +20,24 @@ class BaseGenerator:
         with open(template_path, 'r') as f:
             return f.read()
 
+    def get_current_date_info(self) -> Dict[str, str]:
+        """Get current date information for template variables."""
+        now = datetime.now()
+        return {
+            "current_date": now.strftime("%Y-%m-%d"),
+            "day_of_week": now.strftime("%A"),
+            "formatted_date": now.strftime("%B %d, %Y")
+        }
+
     def extract_common_data(self, test_data: Dict[str, Any]) -> Dict[str, Any]:
         """Extract common data fields from simplified test data."""
         unique_id = test_data.get("unique_id", "")
         related_models = test_data.get("related_models", [])
         model_file_paths = test_data.get("model_file_paths", [])
         test_parameters = test_data.get("test_parameters", {})
+
+        # Get current date information
+        date_info = self.get_current_date_info()
 
         return {
             "test_name": test_data.get("test_name", "unknown_test"),
@@ -45,7 +58,9 @@ class BaseGenerator:
             "severity": test_data.get("severity", ""),
             "error_threshold": test_data.get("error_threshold", ""),
             "warn_threshold": test_data.get("warn_threshold", ""),
-            "priority": test_data.get("priority", "unknown_priority")
+            "priority": test_data.get("priority", "unknown_priority"),
+            # Add current date information
+            **date_info
         }
 
     def format_expected_values_sql(self, values: List[str]) -> str:
