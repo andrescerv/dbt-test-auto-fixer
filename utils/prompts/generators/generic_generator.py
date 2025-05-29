@@ -51,11 +51,7 @@ class GenericGenerator(BaseGenerator):
    [Copy the compiled test query from above and run it to see the actual failing records]
    "
    ```
-4. **Investigate the schema file** (if applicable) using cat command:
-   ```bash
-   cat {data['schema_file']}
-   ```
-5. **Investigate and implement** the appropriate fix based on the decision framework""",
+4. **Investigate and implement** the appropriate fix based on the decision framework""",
             "pr_title": f"🤖 Auto-fix: {test_type} test for {data['model_name']}",
             "pr_summary": f"Auto-fix for failing {test_type} test on `{data['model_name']}`."
         }

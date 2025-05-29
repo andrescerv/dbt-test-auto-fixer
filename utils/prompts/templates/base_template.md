@@ -31,14 +31,14 @@ bq query --use_legacy_sql=false "
 
 ## Implementation Instructions
 1. **Create a clean new branch from main**: `git checkout main && git pull origin main && git checkout -b {branch_name}`
-2. **Locate the failing model and schema files**: Use the file paths provided in the Critical Information section above to locate:
-   - The failing model file
-   - The corresponding schema.yml file
-   Verify these files exist before proceeding.
+2. **Locate and examine the failing model and schema files**: Use the file paths provided in the Critical Information section above to:
+   - Locate and verify the failing model file exists
+   - Locate and examine the corresponding schema.yml file using: `cat {schema_file}`
+   - Understand the current test configuration before proceeding
 {implementation_steps}
-6. **Test your changes**: `dbt test --select {test_short_name}`
-7. **Commit with descriptive message**: Explain the root cause and fix implemented
-8. **Create PR** with title: `{pr_title}`
+5. **Test your changes**: `dbt test --select {test_short_name}`
+6. **Commit with descriptive message**: Explain the root cause and fix implemented
+7. **Create PR** with title: `{pr_title}`
 
 ## PR Description Template
 ```

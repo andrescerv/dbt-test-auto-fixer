@@ -51,11 +51,7 @@ WHERE {data['column_name']} IS NULL
 - Consider if this affects downstream models that depend on this column""",
             "branch_name": f"fix-{data['model_name']}-{data['column_name']}-not-null",
             "implementation_steps": f"""3. **Run the investigation queries** above to understand the null data pattern
-4. **Investigate the schema file**:
-   ```bash
-   cat {data['schema_file']}
-   ```
-5. **Implement the appropriate fix** based on the decision framework:
+4. **Implement the appropriate fix** based on the decision framework:
    - **If JOIN issue**: Fix JOIN conditions in the model
    - **If source data**: Add data cleaning logic or COALESCE
    - **If business rule change**: Update test configuration or remove test""",
