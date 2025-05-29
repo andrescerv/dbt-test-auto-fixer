@@ -62,12 +62,12 @@ ORDER BY {data['column_name']}
 - Search for similar patterns across other models
 - Consider if this affects downstream models that expect unique values""",
             "branch_name": f"fix-{data['model_name']}-{data['column_name']}-unique",
-            "implementation_steps": f"""2. **Run the investigation queries** above to understand the duplicate pattern
-3. **Investigate the schema file**:
+            "implementation_steps": f"""3. **Run the investigation queries** above to understand the duplicate pattern
+4. **Investigate the schema file**:
    ```bash
    cat {data['schema_file']}
    ```
-4. **Implement the appropriate fix** based on the decision framework:
+5. **Implement the appropriate fix** based on the decision framework:
    - **If deduplication needed**: Add DISTINCT or ROW_NUMBER() window function
    - **If grain issue**: Fix GROUP BY logic or model design
    - **If source duplicates**: Add deduplication logic or fix upstream

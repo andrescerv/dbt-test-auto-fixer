@@ -45,17 +45,17 @@ class GenericGenerator(BaseGenerator):
 - Search for similar tests across the project
 - Consider downstream dependencies""",
             "branch_name": f"fix-{data['model_name']}-{test_type}",
-            "implementation_steps": f"""2. **Run the compiled test query** to understand the failing data using gcloud:
+            "implementation_steps": f"""3. **Run the compiled test query** to understand the failing data using gcloud:
    ```bash
    bq query --use_legacy_sql=false "
    [Copy the compiled test query from above and run it to see the actual failing records]
    "
    ```
-3. **Investigate the schema file** (if applicable) using cat command:
+4. **Investigate the schema file** (if applicable) using cat command:
    ```bash
    cat {data['schema_file']}
    ```
-4. **Investigate and implement** the appropriate fix based on the decision framework""",
+5. **Investigate and implement** the appropriate fix based on the decision framework""",
             "pr_title": f"🤖 Auto-fix: {test_type} test for {data['model_name']}",
             "pr_summary": f"Auto-fix for failing {test_type} test on `{data['model_name']}`."
         }

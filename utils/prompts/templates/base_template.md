@@ -1,7 +1,15 @@
 # Test Auto-Fix 🤖: {test_type_title} Test Failure
 
+## Objectives
+**Primary Goal**: Fix the failing test to ensure data quality and pipeline reliability.
+
+**Secondary Goal**: Create a human-readable pull request that clearly explains the issue and solution. Remember that a human will review this PR, so keep explanations concise and focused.
+
 ## Critical Information
 {critical_info_section}
+
+## Decision Framework
+{decision_framework}
 
 ## Compiled Test Query
 ```sql
@@ -18,18 +26,19 @@ bq query --use_legacy_sql=false "
 
 {investigation_steps}
 
-## Decision Framework
-{decision_framework}
-
 ## Scope Analysis
 {scope_analysis}
 
 ## Implementation Instructions
 1. **Create a clean new branch from main**: `git checkout main && git pull origin main && git checkout -b {branch_name}`
+2. **Locate the failing model and schema files**: Use the file paths provided in the Critical Information section above to locate:
+   - The failing model file
+   - The corresponding schema.yml file
+   Verify these files exist before proceeding.
 {implementation_steps}
-5. **Test your changes**: `dbt test --select {test_short_name}`
-6. **Commit with descriptive message**: Explain the root cause and fix implemented
-7. **Create PR** with title: `{pr_title}`
+6. **Test your changes**: `dbt test --select {test_short_name}`
+7. **Commit with descriptive message**: Explain the root cause and fix implemented
+8. **Create PR** with title: `{pr_title}`
 
 ## PR Description Template
 ```
@@ -48,6 +57,9 @@ bq query --use_legacy_sql=false "
 
 ## Impact
 - [Describe how this affects the data and downstream dependencies]
+
+## Investigation Details (Optional)
+[If helpful for understanding, you may include up to 2 queries and their results to show your analysis process. Keep this section brief and only include if it adds value to the human reviewer's understanding.]
 
 ---
 *This fix was suggested by Augment as part of dbt test fixing automation.*
