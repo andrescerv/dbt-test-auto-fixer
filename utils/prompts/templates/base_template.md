@@ -17,12 +17,16 @@
 ```
 
 ## Root Cause Analysis Required
+**CRITICAL**: Always use production data for analysis, not local dev tables which may have stale data.
+
 **FIRST**: Run the compiled test query above using gcloud to see the actual failing data:
 ```bash
 bq query --use_legacy_sql=false "
 [Copy the compiled test query from above]
 "
 ```
+
+**Important**: Local dbt commands may use dev tables (prefixed with "dbt_acervantes") that contain stale data, causing misleading test failures. Always use gcloud/BigQuery commands to query production data for accurate analysis.
 
 {investigation_steps}
 
