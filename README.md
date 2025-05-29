@@ -27,8 +27,8 @@ DBT_CLOUD_JOB_ID=your_job_id
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd auto-fix-dbt-tests
+git clone https://github.com/andrescerv/dbt-test-auto-fixer.git
+cd dbt-test-auto-fixer
 
 # Create virtual environment
 python -m venv venv
@@ -79,7 +79,7 @@ python dbt_test_fixer.py generate-prompts
 ## Project Structure
 
 ```
-auto-fix-dbt-tests/
+dbt-test-auto-fixer/
 ├── dbt_test_fixer.py          # Main script with all commands
 ├── utils/                     # Helper modules
 │   ├── api_client.py         # dbt Cloud API client
