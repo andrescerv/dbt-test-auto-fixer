@@ -69,7 +69,7 @@ bq query --use_legacy_sql=false "
 - [Describe how this affects the data and downstream dependencies]
 
 ## Investigation Details (Optional)
-[If helpful for understanding, you may include up to 2 queries and their results to show your analysis process. Keep this section brief and only include if it adds value to the human reviewer's understanding.]
+[If helpful for understanding, you may include up to 2 queries that are queriable in BigQuery and their results to show your analysis process. Keep this section brief and only include if it adds value to the human reviewer's understanding.]
 
 ---
 *This fix was suggested by Augment as part of dbt test fixing automation.*
