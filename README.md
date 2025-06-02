@@ -33,8 +33,8 @@ DBT_CLOUD_JOB_ID=your_job_id
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd auto-fix-dbt-tests
+git clone https://github.com/andrescerv/dbt-test-auto-fixer.git
+cd dbt-test-auto-fixer
 
 # Create virtual environment
 python -m venv venv
