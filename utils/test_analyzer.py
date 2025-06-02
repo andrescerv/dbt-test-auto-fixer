@@ -49,6 +49,18 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
         test_metadata = test_definition.get("test_metadata", {})
         refs = test_definition.get("refs", [])
 
+        # Extract test type with fallback detection and user-friendly mapping
+        test_type = test_metadata.get("name")
+        if not test_type:
+            # Use fallback detection for custom tests (already includes user-friendly mapping)
+            test_type = detect_test_type_from_unique_id(unique_id)
+        else:
+            # Apply user-friendly mapping to test_metadata names as well
+            test_type = apply_user_friendly_mapping(test_type)
+
+        # Extract model file paths from manifest
+        model_file_paths = _extract_model_file_paths(refs, manifest)
+
         simplified_test = {
             "unique_id": unique_id,
             "test_name": test_name,
@@ -60,9 +72,10 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
             "severity": config.get("severity"),
             "error_threshold": config.get("error_if"),
             "warn_threshold": config.get("warn_if"),
-            "test_type": test_metadata.get("name"),
+            "test_type": test_type,
             "test_parameters": test_metadata.get("kwargs", {}),
             "related_models": [ref.get("name", "") for ref in refs if ref.get("name")],
+            "model_file_paths": model_file_paths,
             "dependencies": test_definition.get("depends_on", {}).get("nodes", []),
             "schema_file": test_definition.get("original_file_path")
         }
@@ -89,6 +102,38 @@ def analyze_failed_tests(artifacts_dir: str = "data/artifacts", output_path: Opt
     return str(output_path)
 
 
+def _extract_model_file_paths(refs: List[Dict[str, Any]], manifest: Dict[str, Any]) -> List[str]:
+    """
+    Extract model file paths from refs using the manifest.
+
+    Args:
+        refs: List of ref objects from test definition
+        manifest: The dbt manifest containing model definitions
+
+    Returns:
+        List of model file paths
+    """
+    model_file_paths = []
+    nodes = manifest.get("nodes", {})
+
+    for ref in refs:
+        model_name = ref.get("name", "")
+        if not model_name:
+            continue
+
+        # Find the model in the manifest nodes
+        # Model unique_ids follow the pattern: model.package.model_name
+        for node_id, node_data in nodes.items():
+            if (node_data.get("resource_type") == "model" and
+                node_data.get("name") == model_name):
+                file_path = node_data.get("original_file_path")
+                if file_path:
+                    model_file_paths.append(file_path)
+                break
+
+    return model_file_paths
+
+
 def _extract_test_name(unique_id: str) -> str:
     """Extract a readable test name from unique_id."""
     if not unique_id:
@@ -113,3 +158,41 @@ def _extract_test_name(unique_id: str) -> str:
     else:
         # Custom test without hash - use the test name (last part)
         return last_part
+
+
+def apply_user_friendly_mapping(test_type: str) -> str:
+    """
+    Apply user-friendly mapping to test type names.
+    This is the single source of truth for test type name mapping.
+    """
+    if test_type == "expect_row_values_to_have_data_for_every_n_datepart":
+        return "data_completeness"
+    return test_type
+
+
+def detect_test_type_from_unique_id(unique_id: str) -> str:
+    """
+    Detect the type of test from unique_id when test_metadata is not available.
+    This is the core logic for test type detection with user-friendly mapping applied.
+    """
+    if not unique_id:
+        return "custom_test"
+
+    # Check for known generic test patterns in unique_id
+    raw_test_type = None
+    if "accepted_values" in unique_id:
+        raw_test_type = "accepted_values"
+    elif "not_null" in unique_id:
+        raw_test_type = "not_null"
+    elif "unique" in unique_id:
+        raw_test_type = "unique"
+    elif "expression_is_true" in unique_id:
+        raw_test_type = "expression_is_true"
+    elif "expect_row_values_to_have_data" in unique_id:
+        raw_test_type = "expect_row_values_to_have_data_for_every_n_datepart"
+    else:
+        # Default to custom_test for any unrecognized pattern
+        raw_test_type = "custom_test"
+
+    # Apply user-friendly mapping
+    return apply_user_friendly_mapping(raw_test_type)
