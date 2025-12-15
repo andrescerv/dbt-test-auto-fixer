@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 dbt Test Fixer - A simple tool for automating the fixing of failed dbt tests.
+test
 
 This script provides functionality to:
 - Fetch dbt Cloud artifacts (run_results.json and manifest.json)
